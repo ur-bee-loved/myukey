@@ -1,0 +1,11 @@
+[build]
+  publish = "." # Use "." if all your content is at root level
+  command = "" # No build needed since it's static HTML/CSS/JS
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[dev]
+  framework = "#static"
