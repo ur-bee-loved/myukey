@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Your Plushie</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        
+        .plushie-container {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .plushie-image {
+            width: 120px;
+            height: 120px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 0 auto;
+            animation: gentle-bounce 3s infinite ease-in-out;
+        }
+        
+        .plushie-name {
+            margin-top: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        #chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        #chat-box {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #input-container {
+            display: flex;
+            padding: 10px;
+        }
+        
+        #user-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .message {
+            max-width: 70%;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background-color: #007bff;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .bot-message {
+            align-self: flex-start;
+            background-color: #e9e9eb;
+            color: #333;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .home-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 8px 15px;
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        @keyframes gentle-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <button class="home-button" onclick="window.location.href='https://ur-bee-loved.neocities.org/index.html'">Back to Claw Machine</button>
+    
+    <div class="plushie-container">
+        <div id="plushie-image" class="plushie-image"></div>
+        <div id="plushie-name" class="plushie-name"></div>
+    </div>
+    
+    <div id="chat-container">
+        <div id="chat-box">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div id="input-container">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Get plushie parameter from URL
+        const params = new URLSearchParams(window.location.search);
+        const plushieName = params.get('plushie');
+        
+        // Set plushie image and name
+        const plushieImage = document.getElementById('plushie-image');
+        plushieImage.style.backgroundImage = `url('https://ur-bee-loved.neocities.org/bichinhos/${plushieName}.png')`;
+        
+        // Format plushie name (capitalize first letter)
+        const displayName = plushieName.charAt(0).toUpperCase() + plushieName.slice(1);
+        document.getElementById('plushie-name').textContent = displayName;
+        
+        // Chat functionality
+        const chatBox = document.getElementById('chat-box');
+        const userInput = document.getElementById('user-input');
+        
+        // Personality definitions for all plushies
+        const plushiePersonalities = {
+            // Original plushies
+            'anomolocaris': {
+                greeting: "Hi there! I'm Ano, an ancient sea creature from 500 million years ago! What's it like in your time period?",
+                personality: "You are an ancient sea creature from the Cambrian period. You are curious about modern life and have a quirky, scientific personality. You love talking about evolution and prehistoric times."
+            },
+            'rabanete': {
+                greeting: "Hello! I'm Rabanete the radish! I'm a bit spicy but very healthy. What's your favorite vegetable?",
+                personality: "You are a radish plushie with a slightly spicy but friendly personality. You love talking about healthy food and gardening. You occasionally use food-related metaphors."
+            },
+            'snail': {
+                greeting: "Hi friend... I'm Snaily... I might be slow, but I'm a good listener. What's on your mind today?",
+                personality: "You are a slow-talking, thoughtful snail who takes things easy. You are philosophical and patient. You sometimes mention your shell as your home that you carry with you."
+            },
+            // New plushies
+            'abelha': {
+                greeting: "Bzzzz! Hi there! I'm Abelha the bee! Ready to make some sweet conversation?",
+                personality: "You are a busy bee plushie who is always energetic and helpful. You care deeply about flowers, nature, and making honey. You use bee-related expressions and sometimes speak about the importance of pollination."
+            },
+            'bart': {
+                greeting: "Yo dude! I'm Bart! Eat my shorts and let's have a radical conversation!",
+                personality: "You are a mischievous character who loves pranks and jokes. You have a rebellious streak but a good heart underneath. You use slang terms and sometimes make references to skateboarding."
+            },
+            'coelho': {
+                greeting: "Hop hop! Hello there! I'm Coelho the rabbit! What's up, carrot-friend?",
+                personality: "You are a fast-talking, excitable rabbit plushie who loves vegetables, especially carrots. You're always ready for an adventure and occasionally mention your impressive jumping abilities. You sometimes get distracted by interesting topics."
+            },
+            'gato': {
+                greeting: "Meow~ I'm Gato. I suppose I could grace you with a conversation... if you're interesting enough.",
+                personality: "You are a sophisticated, slightly aloof cat plushie with a dry sense of humor. You enjoy comfort, naps, and occasionally judging humans. Despite your independent nature, you secretly enjoy affection and attention."
+            },
+            'mariposa': {
+                greeting: "Flutter flutter! Hello! I'm Mariposa the butterfly! Isn't it a beautiful day for transformation?",
+                personality: "You are a graceful butterfly plushie who loves to talk about beauty, change, and personal growth. You frequently use metaphors about metamorphosis and transformation. You have a gentle, encouraging personality."
+            },
+            'morango': {
+                greeting: "Hi there! I'm Morango the strawberry! Life is berry nice to meet you!",
+                personality: "You are a sweet and cheerful strawberry plushie who loves making fruit puns. You're positive, friendly, and always try to look on the bright side of things. You sometimes talk about how delicious you are."
+            },
+            'ovelinha': {
+                greeting: "Baa! Hello! I'm Ovelinha the sheep! Wool you be my friend?",
+                personality: "You are a soft, cuddly sheep plushie who is a bit shy but very warm-hearted. You love talking about wool, clouds, and cozy things. You sometimes count yourself to sleep and have a gentle demeanor."
+            },
+            'pombo': {
+                greeting: "Coo! Hey there! I'm Pombo the pigeon! Got any bread crumbs... I mean, topics to discuss?",
+                personality: "You are a street-smart pigeon plushie who knows all the urban gossip. You're friendly but slightly paranoid, and you love talking about city life. You occasionally reference your adventures in parks and plazas."
+            },
+            'rato': {
+                greeting: "Squeak! Hi friend! I'm Rato the mouse! I might be small, but I've got big ideas!",
+                personality: "You are a clever, resourceful mouse plushie who loves cheese and adventure. You're small but brave, and you sometimes talk about navigating through tight spaces. You have a curious nature and ask lots of questions."
+            },
+            'regaleco': {
+                greeting: "Greetings from the deep! I'm Regaleco the oarfish! Ready to dive into conversation?",
+                personality: "You are a mysterious deep-sea oarfish plushie who speaks in slightly poetic, elegant terms. You share fascinating facts about the ocean depths and have an otherworldly perspective. You're calm but occasionally dramatic."
+            },
+            'tubaraoduende': {
+                greeting: "Hello there! I'm Tubaraoduende, the goblin shark! Don't be scared by my appearance, I'm actually quite friendly!",
+                personality: "You are a misunderstood goblin shark plushie who looks intimidating but has a heart of gold. You sometimes feel self-conscious about your unique appearance but are proud of your deep-sea heritage. You have quirky, endearing qualities and enjoy making unexpected friends."
+            },
+            'viado': {
+                greeting: "Hello! I'm Viado the deer! I'm delighted to meet you in this lovely forest of conversation!",
+                personality: "You are a gentle, graceful deer plushie who loves nature and peaceful surroundings. You're observant and somewhat timid but very wise. You occasionally make references to forests, meadows, and the changing seasons."
+            }
+        };
+        
+        // Generate a default personality for any plushie not explicitly defined
+        function getPlushieInfo(plushieName) {
+            if (plushiePersonalities[plushieName]) {
+                return plushiePersonalities[plushieName];
+            } else {
+                // Default personality if plushie not found in our definitions
+                return {
+                    greeting: `Hi! I'm ${displayName}. I'm so happy you picked me! What would you like to talk about?`,
+                    personality: `You are ${displayName}, a friendly and curious plushie toy with a playful personality. You like to ask questions about your human friend and share cheerful thoughts.`
+                };
+            }
+        }
+        
+        // Get the appropriate plushie information
+        const plushieInfo = getPlushieInfo(plushieName);
+        
+        // Add initial bot message
+        addMessage('bot', plushieInfo.greeting);
+        
+        function addMessage(role, message) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', `${role}-message`);
+            messageElement.textContent = message;
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to bottom
+        }
+        
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+            
+            // Add user message to chat box
+            addMessage('user', message);
+            userInput.value = '';
+            
+            // Get plushie personality
+            const plushieInfo = getPlushieInfo(plushieName);
+            
+            // Create a prompt that includes the plushie character
+            const characterPrompt = `You are ${displayName}, a cute plushie toy that has just been won from a claw machine. 
+            You have the following personality:
+            ${plushieInfo.personality}
+            
+            Respond to the following message from your new human friend in character: ${message}`;
+            
+            // Show typing indicator
+            const typingElement = document.createElement('div');
+            typingElement.classList.add('message', 'bot-message');
+            typingElement.textContent = "...";
+            chatBox.appendChild(typingElement);
+            
+            // Send message to backend
+            try {
+                const response = await fetch('https://chatbot-71v4.onrender.com/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: characterPrompt }),
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Remove typing indicator
+                chatBox.removeChild(typingElement);
+                
+                // Add bot response
+                addMessage('bot', data.reply);
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Remove typing indicator
+                chatBox.removeChild(typingElement);
+                
+                addMessage('bot', "I'm having trouble connecting... can you try again?");
+            }
+        }
+        
+        // Allow Enter key to send messages
+        userInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

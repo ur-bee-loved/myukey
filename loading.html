@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carregando seu novo amiguinho</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        
+        .loading-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .plushie-image {
+            width: 100px;
+            height: 100px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            animation: bounce 1.5s infinite ease-in-out;
+        }
+        
+        .progress-bar {
+            position: relative;
+            width: 80%;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin-top: 30px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            position: absolute;
+            height: 100%;
+            background-color: #007bff;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        .loading-text {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <div id="plushie-image" class="plushie-image"></div>
+    </div>
+    
+    <div class="progress-bar">
+        <div id="progress" class="progress"></div>
+    </div>
+    
+    <div id="loading-text" class="loading-text">Acordando seu novo amigo</div>
+
+    <script>
+        // Get plushie parameter from URL
+        const params = new URLSearchParams(window.location.search);
+        const plushieName = params.get('plushie');
+        
+        // Set the plushie image
+        const plushieImage = document.getElementById('plushie-image');
+        plushieImage.style.backgroundImage = `url('https://ur-bee-loved.neocities.org/bichinhos/${plushieName}.png')`;
+        
+        // Mock loading progress
+        const progressBar = document.getElementById('progress');
+        const loadingText = document.getElementById('loading-text');
+        let progress = 0;
+        
+        // Simulate server initialization (~50 seconds)
+        const totalTime = 50000; // 50 seconds
+        const interval = 500; // Update every 500ms
+        const incrementPerStep = (interval / totalTime) * 100;
+        
+        const loadingMessages = [
+            "Acordando seu novo amigo...",
+            "Ele ainda está se esticando...",
+            "Escovando os dentes...",
+            "Quase lá! Seu novo amigo está ansioso pra te conhecer..."
+        ];
+        
+        const loadingInterval = setInterval(() => {
+            progress += incrementPerStep;
+            progressBar.style.width = `${Math.min(progress, 100)}%`;
+            
+            // Update loading message at different stages
+            if (progress > 25 && progress <= 50) {
+                loadingText.textContent = loadingMessages[1];
+            } else if (progress > 50 && progress <= 75) {
+                loadingText.textContent = loadingMessages[2];
+            } else if (progress > 75) {
+                loadingText.textContent = loadingMessages[3];
+            }
+            
+            if (progress >= 100) {
+                clearInterval(loadingInterval);
+                // Redirect to chat page after a small delay
+                setTimeout(() => {
+                    window.location.href = `https://ur-bee-loved.neocities.org/chat?plushie=${plushieName}`;
+                }, 1000);
+            }
+        }, interval);
+    </script>
+</body>
+</html>
