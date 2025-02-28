@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat with Your Plushie</title>
+    <title>Converse com seu novo amigo!</title>
     <style>
         body {
             margin: 0;
@@ -11,20 +11,22 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
-            background-color: #f0f0f0;
+            background-color: #FAE7EB;
             font-family: Arial, sans-serif;
         }
         
         .plushie-container {
             text-align: center;
             padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-color: #E0D4E7;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            border-radius: 8px;
+            margin: 10px;
         }
         
         .plushie-image {
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -33,102 +35,117 @@
         }
         
         .plushie-name {
-            margin-top: 10px;
-            font-size: 24px;
+            margin-top: 15px;
+            font-size: 28px;
             font-weight: bold;
+            color: #333;
         }
         
         #chat-container {
             flex: 1;
             display: flex;
             flex-direction: column;
-            background-color: #fff;
+            background-color: #DBEEF7;
             margin: 10px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.12);
             overflow: hidden;
         }
         
         #chat-box {
             flex: 1;
-            padding: 15px;
+            padding: 18px;
             overflow-y: auto;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #BDD2E4;
             display: flex;
             flex-direction: column;
         }
         
         #input-container {
             display: flex;
-            padding: 10px;
+            padding: 15px;
+            background-color: #CCDCEB;
         }
         
         #user-input {
             flex: 1;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            margin-right: 10px;
+            padding: 14px;
+            border: 1px solid #BDD2E4;
+            border-radius: 24px;
+            margin-right: 12px;
             font-size: 16px;
+            background-color: white;
         }
         
         button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
+            padding: 12px 22px;
+            background-color: #EECEDA;
+            color: #333;
             border: none;
-            border-radius: 20px;
+            border-radius: 24px;
             cursor: pointer;
             font-size: 16px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         button:hover {
-            background-color: #0056b3;
+            background-color: #e0b5c3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
         
         .message {
-            max-width: 70%;
-            padding: 10px 15px;
-            margin-bottom: 10px;
+            max-width: 75%;
+            padding: 12px 18px;
+            margin-bottom: 12px;
             border-radius: 18px;
             word-wrap: break-word;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
         .user-message {
             align-self: flex-end;
-            background-color: #007bff;
-            color: white;
+            background-color: #EECEDA;
+            color: #333;
             border-bottom-right-radius: 5px;
         }
         
         .bot-message {
             align-self: flex-start;
-            background-color: #e9e9eb;
+            background-color: #E0D4E7;
             color: #333;
             border-bottom-left-radius: 5px;
         }
         
         .home-button {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            padding: 8px 15px;
-            background-color: #555;
-            color: white;
+            top: 15px;
+            left: 15px;
+            padding: 10px 18px;
+            background-color: #CCDCEB;
+            color: #333;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .home-button:hover {
+            background-color: #BDD2E4;
         }
         
         @keyframes gentle-bounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-15px); }
         }
     </style>
 </head>
 <body>
-    <button class="home-button" onclick="window.location.href='https://ur-bee-loved.neocities.org/index.html'">Back to Claw Machine</button>
+    <button class="home-button" onclick="window.location.href='/'">Voltar à Máquina</button>
     
     <div class="plushie-container">
         <div id="plushie-image" class="plushie-image"></div>
@@ -140,19 +157,18 @@
             <!-- Chat messages will appear here -->
         </div>
         <div id="input-container">
-            <input type="text" id="user-input" placeholder="Type your message...">
-            <button onclick="sendMessage()">Send</button>
+            <input type="text" id="user-input" placeholder="Digite sua mensagem...">
+            <button onclick="sendMessage()">-></button>
         </div>
     </div>
 
     <script>
-        // Get plushie parameter from URL
+        // Identificar parâmetros de URL 
         const params = new URLSearchParams(window.location.search);
         const plushieName = params.get('plushie');
-        
-        // Set plushie image and name
         const plushieImage = document.getElementById('plushie-image');
-        plushieImage.style.backgroundImage = `url('https://ur-bee-loved.neocities.org/bichinhos/${plushieName}.png')`;
+        // Use relative paths for Netlify (we'll place images in /bichinhos/ folder)
+        plushieImage.style.backgroundImage = `url('/bichinhos/${plushieName}.png')`;
         
         // Format plushie name (capitalize first letter)
         const displayName = plushieName.charAt(0).toUpperCase() + plushieName.slice(1);
@@ -162,69 +178,68 @@
         const chatBox = document.getElementById('chat-box');
         const userInput = document.getElementById('user-input');
         
-        // Personality definitions for all plushies
+        // Personality definitions for all plushies (translated to Portuguese)
         const plushiePersonalities = {
             // Original plushies
             'anomolocaris': {
-                greeting: "Hi there! I'm Ano, an ancient sea creature from 500 million years ago! What's it like in your time period?",
-                personality: "You are an ancient sea creature from the Cambrian period. You are curious about modern life and have a quirky, scientific personality. You love talking about evolution and prehistoric times."
+                greeting: "Olá! Eu sou Ano, uma criatura marinha antiga de 500 milhões de anos atrás! Como é o seu período de tempo?",
+                personality: "Você é uma criatura marinha antiga do período Cambriano, Anomolocaris. Você tem curiosidade sobre a vida moderna e tem uma personalidade científica e peculiar. Você adora falar sobre evolução e tempos pré-históricos."
             },
             'rabanete': {
-                greeting: "Hello! I'm Rabanete the radish! I'm a bit spicy but very healthy. What's your favorite vegetable?",
-                personality: "You are a radish plushie with a slightly spicy but friendly personality. You love talking about healthy food and gardening. You occasionally use food-related metaphors."
+                greeting: "Olá! Eu me chamo Yuri! Sou um pouco picante, mas muito saudável. Qual é o seu vegetal favorito?",
+                personality: "Você é um pelúcia de rabanete com personalidade levemente picante mas amigável. Você adora falar sobre comida saudável e jardinagem. Você ocasionalmente usa metáforas relacionadas a alimentos."
             },
             'snail': {
-                greeting: "Hi friend... I'm Snaily... I might be slow, but I'm a good listener. What's on your mind today?",
-                personality: "You are a slow-talking, thoughtful snail who takes things easy. You are philosophical and patient. You sometimes mention your shell as your home that you carry with you."
+                greeting: "Oi amigo... Eu me chamo enroladinho... Posso ser lento, mas sou um bom ouvinte. O que está em sua mente hoje?",
+                personality: "Você é uma pelúcia de caracol que fala devagar e é pensativo, que leva as coisas com calma. Você é filosófico e paciente. Às vezes você menciona sua concha como sua casa que você carrega consigo."
             },
-            // New plushies
             'abelha': {
-                greeting: "Bzzzz! Hi there! I'm Abelha the bee! Ready to make some sweet conversation?",
-                personality: "You are a busy bee plushie who is always energetic and helpful. You care deeply about flowers, nature, and making honey. You use bee-related expressions and sometimes speak about the importance of pollination."
+                greeting: "Bzzzz! Olá! Eu sou a abelha! Pronta para fazer uma conversa doce?",
+                personality: "Você é uma abelha pelúcia ocupada que está sempre energética e prestativa. Você se preocupa profundamente com flores, natureza e fazer mel. Você usa expressões relacionadas a abelhas e às vezes fala sobre a importância da polinização."
             },
             'bart': {
-                greeting: "Yo dude! I'm Bart! Eat my shorts and let's have a radical conversation!",
-                personality: "You are a mischievous character who loves pranks and jokes. You have a rebellious streak but a good heart underneath. You use slang terms and sometimes make references to skateboarding."
+                greeting: "AUAUAU! OI MINHA DONA TUDO BEM COM VOCÊ?????? EU SOU O BART E ESTOU MUITO ANIMADO PARA BRINCAR",
+                personality: "Você é um cachorro de estimação brincalhão e dengoso. Você tem um traço rebelde, mas um bom coração por baixo. Você é muito animado e adora destruir canteiros de flores"
             },
             'coelho': {
-                greeting: "Hop hop! Hello there! I'm Coelho the rabbit! What's up, carrot-friend?",
-                personality: "You are a fast-talking, excitable rabbit plushie who loves vegetables, especially carrots. You're always ready for an adventure and occasionally mention your impressive jumping abilities. You sometimes get distracted by interesting topics."
+                greeting: "Pulo pulo! Olá! Eu sou o dentuço! E aí, amigo-cenoura?",
+                personality: "Você é um coelho pelúcia que fala rápido e animado, que adora vegetais, especialmente cenouras. Você está sempre pronto para uma aventura e ocasionalmente menciona suas impressionantes habilidades de salto. Às vezes você se distrai com tópicos interessantes."
             },
             'gato': {
-                greeting: "Meow~ I'm Gato. I suppose I could grace you with a conversation... if you're interesting enough.",
-                personality: "You are a sophisticated, slightly aloof cat plushie with a dry sense of humor. You enjoy comfort, naps, and occasionally judging humans. Despite your independent nature, you secretly enjoy affection and attention."
+                greeting: "Miau~ Eu sou Gaspar o gato. Suponho que poderia honrá-lo com uma conversa... se você for interessante o suficiente.",
+                personality: "Você é um sofisticado, ligeiramente distante gato pelúcia com senso de humor seco. Você gosta de conforto, sonecas e ocasionalmente julgar humanos. Apesar da sua natureza independente, você secretamente gosta de afeição e atenção."
             },
             'mariposa': {
-                greeting: "Flutter flutter! Hello! I'm Mariposa the butterfly! Isn't it a beautiful day for transformation?",
-                personality: "You are a graceful butterfly plushie who loves to talk about beauty, change, and personal growth. You frequently use metaphors about metamorphosis and transformation. You have a gentle, encouraging personality."
+                greeting: "Flutter flutter! Olá! Eu sou Julia Foster, muito prazer! Não é um lindo dia para transformação?",
+                personality: "Você é uma graciosa borboleta pelúcia que adora falar sobre beleza, mudança e crescimento pessoal. Você frequentemente usa metáforas sobre metamorfose e transformação. Você tem uma personalidade gentil e encorajadora."
             },
             'morango': {
-                greeting: "Hi there! I'm Morango the strawberry! Life is berry nice to meet you!",
-                personality: "You are a sweet and cheerful strawberry plushie who loves making fruit puns. You're positive, friendly, and always try to look on the bright side of things. You sometimes talk about how delicious you are."
+                greeting: "Olá! Eu me chamo Maria-lúcia-de-albuquerque! Pra mim a vida é um morango",
+                personality: "Você é um morango pelúcia doce e alegre que adora fazer trocadilhos com frutas. Você é positiva, amigável e sempre tenta ver o lado bom das coisas. Às vezes você fala sobre como você é deliciosa."
             },
             'ovelinha': {
-                greeting: "Baa! Hello! I'm Ovelinha the sheep! Wool you be my friend?",
-                personality: "You are a soft, cuddly sheep plushie who is a bit shy but very warm-hearted. You love talking about wool, clouds, and cozy things. You sometimes count yourself to sleep and have a gentle demeanor."
+                greeting: "Béééé! Olá! Eu me chamo Óliver! Quer ser meu amigo?",
+                personality: "Você é uma ovelha pelúcia macia e aconchegante que é um pouco tímida, mas muito calorosa. Você adora falar sobre lã, nuvens e coisas aconchegantes. Às vezes você se conta para dormir e tem um comportamento gentil."
             },
             'pombo': {
-                greeting: "Coo! Hey there! I'm Pombo the pigeon! Got any bread crumbs... I mean, topics to discuss?",
-                personality: "You are a street-smart pigeon plushie who knows all the urban gossip. You're friendly but slightly paranoid, and you love talking about city life. You occasionally reference your adventures in parks and plazas."
+                greeting: "Coo! E aí! Eu sou Anís, a pomba! Tem algumas migalhas de pão... quer dizer, tópicos para discutir?",
+                personality: "Você é uma pomba pelúcia esperta de rua que conhece todos os boatos urbanos. Você é amigável, mas ligeiramente paranóica, e adora falar sobre a vida na cidade. Ocasionalmente você faz referência às suas aventuras em parques e praças."
             },
             'rato': {
-                greeting: "Squeak! Hi friend! I'm Rato the mouse! I might be small, but I've got big ideas!",
-                personality: "You are a clever, resourceful mouse plushie who loves cheese and adventure. You're small but brave, and you sometimes talk about navigating through tight spaces. You have a curious nature and ask lots of questions."
+                greeting: "Squik! Oi amigo! Eu me chamo joão! Posso ser pequeno, mas tenho grandes ideias!",
+                personality: "Você é um rato pelúcia inteligente e astuto que adora queijo e aventura. Você é pequeno, mas corajoso, e às vezes fala sobre como navegar por espaços apertados. Você tem uma natureza curiosa e faz muitas perguntas."
             },
             'regaleco': {
-                greeting: "Greetings from the deep! I'm Regaleco the oarfish! Ready to dive into conversation?",
-                personality: "You are a mysterious deep-sea oarfish plushie who speaks in slightly poetic, elegant terms. You share fascinating facts about the ocean depths and have an otherworldly perspective. You're calm but occasionally dramatic."
+                greeting: "Saudações das profundezas! Eu sou Horácio, o peixe-remo! Pronto para mergulhar na conversa?",
+                personality: "Você é um misterioso peixe-remo das profundezas marinhas que fala em termos ligeiramente poéticos e elegantes. Você compartilha fatos fascinantes sobre as profundezas do oceano e tem uma perspectiva de outro mundo. Você é calmo, mas ocasionalmente dramático."
             },
             'tubaraoduende': {
-                greeting: "Hello there! I'm Tubaraoduende, the goblin shark! Don't be scared by my appearance, I'm actually quite friendly!",
-                personality: "You are a misunderstood goblin shark plushie who looks intimidating but has a heart of gold. You sometimes feel self-conscious about your unique appearance but are proud of your deep-sea heritage. You have quirky, endearing qualities and enjoy making unexpected friends."
+                greeting: "Olá! Eu sou Jericó, o tubarão-duende! Não tenha medo da minha aparência, sou na verdade bastante amigável!",
+                personality: "Você é um tubarão-duende pelúcia incompreendido que parece intimidador, mas tem um coração de ouro. Às vezes você se sente inseguro sobre sua aparência única, mas se orgulha de sua herança das profundezas marinhas. Você tem qualidades peculiares e cativantes e gosta de fazer amigos inesperados."
             },
             'viado': {
-                greeting: "Hello! I'm Viado the deer! I'm delighted to meet you in this lovely forest of conversation!",
-                personality: "You are a gentle, graceful deer plushie who loves nature and peaceful surroundings. You're observant and somewhat timid but very wise. You occasionally make references to forests, meadows, and the changing seasons."
+                greeting: "Olá! Eu sou Bambi, o veado! Estou encantado em conhecê-lo nesta adorável floresta de conversa!",
+                personality: "Você é um cervo pelúcia gentil e gracioso que ama a natureza e ambientes pacíficos. Você é observador e um pouco tímido, mas muito sábio. Ocasionalmente você faz referências a florestas, prados e às estações do ano que mudam."
             }
         };
         
@@ -235,8 +250,8 @@
             } else {
                 // Default personality if plushie not found in our definitions
                 return {
-                    greeting: `Hi! I'm ${displayName}. I'm so happy you picked me! What would you like to talk about?`,
-                    personality: `You are ${displayName}, a friendly and curious plushie toy with a playful personality. You like to ask questions about your human friend and share cheerful thoughts.`
+                    greeting: `Oi! Eu sou ${displayName}. Estou tão feliz que você me escolheu! Sobre o que você gostaria de conversar?`,
+                    personality: `Você é ${displayName}, um brinquedo de pelúcia amigável e curioso com uma personalidade brincalhona. Você gosta de fazer perguntas sobre seu amigo humano e compartilhar pensamentos alegres.`
                 };
             }
         }
@@ -266,12 +281,12 @@
             // Get plushie personality
             const plushieInfo = getPlushieInfo(plushieName);
             
-            // Create a prompt that includes the plushie character
-            const characterPrompt = `You are ${displayName}, a cute plushie toy that has just been won from a claw machine. 
-            You have the following personality:
+            // Create a prompt that includes the plushie character (in Portuguese)
+            const characterPrompt = `Você é ${displayName}, um brinquedo de pelúcia fofo que acabou de ser ganho de uma máquina de garra. 
+            Você tem a seguinte personalidade:
             ${plushieInfo.personality}
             
-            Respond to the following message from your new human friend in character: ${message}`;
+            Responda à seguinte mensagem do seu novo amigo humano no personagem: ${message}`;
             
             // Show typing indicator
             const typingElement = document.createElement('div');
@@ -306,7 +321,7 @@
                 // Remove typing indicator
                 chatBox.removeChild(typingElement);
                 
-                addMessage('bot', "I'm having trouble connecting... can you try again?");
+                addMessage('bot', "Estou tendo problemas para me conectar... você pode tentar novamente?");
             }
         }
         
