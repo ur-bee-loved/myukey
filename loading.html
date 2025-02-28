@@ -91,7 +91,7 @@
         let progress = 0;
         
         // Simulate server initialization (~50 seconds)
-        const totalTime = 50000; // 50 seconds
+        const totalTime = 30000; // 50 seconds
         const interval = 500; // Update every 500ms
         const incrementPerStep = (interval / totalTime) * 100;
         
@@ -99,7 +99,7 @@
             "Acordando seu novo amigo...",
             "Ele ainda está se esticando...",
             "Escovando os dentes...",
-            "Quase lá! Seu novo amigo está ansioso pra te conhecer..."
+            "Seu novo amigo está ansioso pra te conhecer..."
         ];
         
         const loadingInterval = setInterval(() => {
@@ -119,7 +119,7 @@
                 clearInterval(loadingInterval);
                 // Redirect to chat page after a small delay
                 setTimeout(() => {
-                    window.location.href = `/chat.html?plushie=${plushieName}`;
+                    window.location.href = `eumeremexomuito.netlify.app/chat.html?plushie=${plushieName}`;
                 }, 1000);
             }
         }, interval);
