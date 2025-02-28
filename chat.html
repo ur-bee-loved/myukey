@@ -243,12 +243,12 @@
             }
         };
         
-        // Generate a default personality for any plushie not explicitly defined
+        // debug
         function getPlushieInfo(plushieName) {
             if (plushiePersonalities[plushieName]) {
                 return plushiePersonalities[plushieName];
             } else {
-                // Default personality if plushie not found in our definitions
+                // default
                 return {
                     greeting: `Oi! Eu sou ${displayName}. Estou tão feliz que você me escolheu! Sobre o que você gostaria de conversar?`,
                     personality: `Você é ${displayName}, um brinquedo de pelúcia amigável e curioso com uma personalidade brincalhona. Você gosta de fazer perguntas sobre seu amigo humano e compartilhar pensamentos alegres.`
