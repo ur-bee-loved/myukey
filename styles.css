@@ -1,0 +1,65 @@
+body {
+    margin: 0;
+    height: 100vh;
+    background-color: #f0f0f0; /* Add a background color for the page */
+    position: relative;
+}
+
+.claw {
+    width: 393px; /* Add "px" for proper sizing */
+    height: 684px; /* Add "px" for proper sizing */
+    position: absolute;
+    top: 50px;
+    left: 10px;
+    background-image: url('https://ur-bee-loved.neocities.org/claw.png');
+    background-size: contain; /* Ensure the image fits within the container */
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1; /* Ensure the claw machine is above the cup */
+}
+
+.cup {
+    width: 320px;
+    height: 415px;
+    position: absolute;
+    top: 70px; /* Adjust to align with the empty space in the claw machine asset */
+    left: 50px; /* Adjust to align with the empty space in the claw machine asset */
+    background-color: transparent;
+    overflow: hidden;
+    z-index: 2; /* Ensure the cup is above the claw machine */
+}
+
+.bear {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-size: cover;
+    transition: transform 0.1s;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.star-button {
+    position: absolute;
+    top: 524px; /* Adjust to match the star's position in the claw asset */
+    left: 121px; /* Adjust to match the star's position in the claw asset */
+    width: 160px; /* Adjust to match the star's size */
+    height: 160px; /* Adjust to match the star's size */
+    background-image: url('https://ur-bee-loved.neocities.org/star.png'); /* Replace with your star image URL */
+    background-size: cover;
+    cursor: pointer;
+    z-index: 3; /* Ensure the star is above other elements */
+    transition: transform 0.2s ease;
+}
+
+.star-button:hover {
+    transform: scale(1.1); /* Add a hover effect */
+}
+
+@keyframes bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.bear.bounce {
+    animation: bounce 0.3s ease;
+}
