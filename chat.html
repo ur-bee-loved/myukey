@@ -145,7 +145,7 @@
     </style>
 </head>
 <body>
-    <button class="home-button" onclick="window.location.href='/'">Voltar à Máquina</button>
+    <button class="home-button" onclick="window.location.href='index.html'">Voltar à Máquina</button>
     
     <div class="plushie-container">
         <div id="plushie-image" class="plushie-image"></div>
@@ -168,7 +168,7 @@
         const plushieName = params.get('plushie');
         const plushieImage = document.getElementById('plushie-image');
         // Use relative paths for Netlify (we'll place images in /bichinhos/ folder)
-        plushieImage.style.backgroundImage = `url('/bichinhos/${plushieName}.png')`;
+        plushieImage.style.backgroundImage = `url('images/bichinhos/${plushieName}.png')`;
         
         // Format plushie name (capitalize first letter)
         const displayName = plushieName.charAt(0).toUpperCase() + plushieName.slice(1);
